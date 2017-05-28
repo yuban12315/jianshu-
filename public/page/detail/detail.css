@@ -1,0 +1,39 @@
+.title {
+    font-weight: 700;
+    font-size: 50px;
+    padding-bottom: 10px;
+}
+
+.author {
+    display: inline;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.time {
+    color: #969696
+}
+
+#author-icon {
+    border: 1px solid #ED705B;
+    border-radius: 5px;
+    padding: 1px;
+}
+
+.header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.content {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+
+.footer {
+    border-top: 1px solid #eeeeee;
+    padding-top: 10px;
+    color: #969696;
+    padding-bottom: 50px;
+}

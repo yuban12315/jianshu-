@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="main">
+<head>
+    <meta charset="UTF-8">
+    <title ng-bind="web_title"></title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+    <link href="stylesheets/style.css" rel="stylesheet">
+    <link href="stylesheets/font-awesome.min.css" rel="stylesheet">
+    <script src="javascripts/vendor/jquery.min.js"></script>
+    <script src="javascripts/vendor/bootstrap.min.js"></script>
+    <script src="javascripts/vendor/angular.min.js"></script>
+    <script src="javascripts/vendor/angular-route.min.js"></script>
+    <script src="javascripts/vendor/angular-css.min.js"></script>
+    <script src="javascripts/angular/services.js"></script>
+    <script src="javascripts/angular/controllers.js"></script>
+
+</head>
+<body>
+<nav ng-controller="navCtrl" class="navbar navbar-default" role="navigation" id="header" ng-show="showNav()">
+    <div class="display" >
+        <div class="navbar-header">
+            <!--导航栏-->
+            <button class="navbar-toggle pull-left" data-toggle="collapse" data-target="#sg-header" id="collapse">
+                <span class="sr-only">下拉菜单</span>
+                <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand main-color" href="#">简书</a>
+        </div>
+        <div class="collapse navbar-collapse col-md-offset-4" style="text-align: center;" id="sg-header">
+            <ul class="nav navbar-nav">
+                <!--菜单-->
+                <li><a class="main-color" href="#/">首页</a></li>
+                <li class="search">
+                    <form>
+                        <!--搜索框-->
+                        <input class="search-input text-center" type="text" placeholder="搜索 : 文章">
+                        <span class="search-btn" ng-click="search()"
+                              style="background-color: rgb(150, 150, 150); border-radius: 50%; color: rgb(255, 255, 255) !important;">
+                        <i class="fa fa-search search-icon"></i>
+                    </span>
+                    </form>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <!--未登录时显示登录和注册按钮-->
+                <li ng-show="!ifSignIn()"><a ng-click="toSignIn()">登录</a></li>
+                <li ng-show="!ifSignIn()"><a ng-click="toSignUp()">注册</a></li>
+                <!--登录后显示下拉菜单-->
+                <li class="dropdown" ng-show="ifSignIn()">
+                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">{{username}} <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#"><i class="fa fa-user main-color"></i>&nbsp;&nbsp;&nbsp;我的主页</a></li>
+                        <li><a href="#"><i class="fa fa-sign-out main-color"></i>&nbsp;&nbsp;&nbsp;退出</a></li>
+                    </ul>
+                </li>
+                <li class="active"><a href="#/sign_up" class="sign-in"><i class="fa fa-pencil main-color"></i>&nbsp;&nbsp;&nbsp;写文章</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="row">
+    <div ng-view></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,34 @@
+<div class="container">
+    <!--首页显示article-->
+    <div class="card col-xs-10 col-xs-offset-1" ng-repeat="item in articles">
+
+        <div class="col-xs-12">
+            <div class="header" >
+                <p class="author main-color">{{item.username}}</p>&nbsp;&nbsp;
+                <p class="time">
+                    <i class="fa fa-clock-o"></i>&nbsp;{{item.publish_date}}
+                </p>
+            </div>
+            <div class="title" ng-click="getDetail($index)">
+                <p>{{item.title}}</p>
+            </div>
+            <div class="content">
+                <p>{{item.content}}</p>
+            </div>
+        </div>
+    </div>
+
+    <!--翻页按钮组-->
+    <div class="col-xs-10 col-xs-offset-1 buttons">
+        <div class="col-xs-2">
+            <button class="btn col-xs-12" ng-class="ifLast()" ng-click="toLast()">上一页</button>
+        </div>
+        <div class="col-xs-2 col-xs-offset-8">
+            <button class="btn col-xs-12" ng-class="ifNext()" ng-click="toNext()">下一页</button>
+        </div>
+
+
+    </div>
+
+    <div class="adder col-xs-12"></div>
+</div>

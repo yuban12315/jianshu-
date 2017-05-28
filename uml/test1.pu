@@ -1,0 +1,13 @@
+@startuml 
+skinparam BorderColor #blue9932CC 
+skinparam backgroundcolor AntiqueWhite/white 
+title 
+类图标题
+end title 
+footer  copyright (c) imfly 2017年5月4日 14:07,  http://bitcoin-on-nodejs.ebookchain.org 
+
+header 《Nodejs开发加密货币》分析用图
+
+
+
+@enduml
