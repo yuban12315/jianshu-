@@ -3,16 +3,20 @@
         <form class="form col-xs-12" ng-submit="submit()">
 
             <div class="title col-xs-12">
-                <b  class="label- label-active">登录</b>
+                <b  class="label- " ng-click="toSignIn()">登录</b>
                 <b class="divider">·</b>
-                <b  class="label- " ng-click="toSignUp()">注册</b>
+                <b  class="label- label-active ">注册</b>
             </div>
-
             <fieldset class="col-xs-12" >
                 <input class="form-control sign-in col-xs-12" type="text" placeholder="用户名" ng-model="form.UserName">
                 <input class="form-control sign-in col-xs-12" type="password" placeholder="密码" ng-model="form.PassWord">
-                <button type="submit" class="btn btn-true col-xs-12">登录</button>
+
+                <button type="submit" class="btn btn-true col-xs-12">注册</button>
             </fieldset>
+            <!--<div  class="col-xs-12">
+                <p>点击 “注册” 即表示您同意并愿意遵守简书
+                    用户协议 和 隐私政策 。</p>
+            </div>-->
         </form>
     </div>
 </div>

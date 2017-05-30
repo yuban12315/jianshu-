@@ -4,20 +4,20 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     $rootScope.web_title = '简书 - 创作你的创作'
     $rootScope.ifSignIn = false
     $rootScope.username = 'test_username'
-    $rootScope.ifShowNavbar=true
+    $rootScope.ifShowNavbar = true
     $scope.ifSignIn = function () {
         return $rootScope.ifSignIn
     }
     $scope.search = function () {
         alert('search')
     }
-    $scope.toSignIn=function () {
+    $scope.toSignIn = function () {
         $location.path('/signIn')
     }
-    $scope.toSignUp=function () {
+    $scope.toSignUp = function () {
         $location.path('/signUp')
     }
-    $scope.showNav=function () {
+    $scope.showNav = function () {
         return $rootScope.ifShowNavbar
     }
 }])
@@ -82,7 +82,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 
         console.clear()
         console.log('main - init')
         $scope.page = 1
-        $rootScope.ifShowNavbar=true
+        $rootScope.ifShowNavbar = true
         $scope.getPage()
 
     }();
@@ -99,26 +99,45 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
             result.data.content = $sce.trustAsHtml(result.data.content)
             $scope.article = result.data
             $scope.article.publish_date = articleService.setDate($scope.article.publish_date, 1)
-            $rootScope.web_title=$scope.article.title+' -简书'
+            $rootScope.web_title = $scope.article.title + ' -简书'
         })
     }
 
     $scope.init = function () {
         console.clear()
-        $rootScope.ifShowNavbar=true
+        $rootScope.ifShowNavbar = true
         console.log('detail-init')
         $scope.getDetail()
     }()
 }])
 
-app.controller('signInCtrl',['$scope','$rootScope','$location','userService',function ($scope, $rootScope, $location, userService) {
+app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
-    $scope.submit=function () {
+    $scope.submit = function () {
         alert('sd')
     }
+    $scope.toSignUp = function () {
+        $location.path('/signUp')
+    }
 
-    $scope.init=function () {
-      $rootScope.ifShowNavbar=true
+    $scope.init = function () {
+        $rootScope.ifShowNavbar = true
+        $rootScope.web_title = '登录 - 简书'
+    }()
+}])
+
+app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
+
+    $scope.submit = function () {
+        alert('ds')
+    }
+    $scope.toSignIn = function () {
+        $location.path('/signIn')
+    }
+
+    $scope.init = function () {
+        $rootScope.ifShowNavbar = true
+        $rootScope.web_title = '注册 - 简书'
     }()
 }])
 
@@ -133,10 +152,15 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'detailCtrl',
             css: 'page/detail/detail.css'
         })
-        .when('/signIn',{
+        .when('/signIn', {
             templateUrl: "page/signIn/signIn.html",
             controller: 'signInCtrl',
             css: 'page/signIn/signIn.css'
+        })
+        .when('/signUp', {
+            templateUrl: "page/signUp/signUp.html",
+            controller: 'signUpCtrl',
+            css: 'page/signUp/signUp.css'
         })
         .otherwise({
             redirectTo: '/'

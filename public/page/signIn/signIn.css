@@ -1,7 +1,40 @@
 .form{
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
-    padding: 60px 30px 60px 30px;
+    padding: 60px 30px 80px 30px;
 }
+
+.title{
+    text-align: center;
+    font-size: 18px;
+    margin-bottom: 50px;
+}
+
+.label-{
+    color:#969696 ;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 5px;
+}
+.divider{
+    padding-left: 10px;
+    padding-right: 10px;
+}
+a{
+    outline: none;
+}
+.label-:hover{
+    color: #969696;
+    border-bottom: 3px solid #ED705B;
+}
+.label-active{
+    color: #ED705B ;
+    border-bottom: 3px solid #ED705B;
+}
+.label-active:hover{
+    color: #ED705B;
+}
+
+
 
 .sign-in{
     border-radius: 0;
