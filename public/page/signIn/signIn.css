@@ -1,0 +1,27 @@
+.form{
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+    padding: 60px 30px 60px 30px;
+}
+
+.sign-in{
+    border-radius: 0;
+    padding:5px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.btn{
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+    border-radius: 0;
+    margin-top: 20px;
+}
+.btn-true{
+    background-color: #ED705B;
+    color: #ffffff;
+}
+.btn-true:hover{
+    color: #ffffff;
+}
+.btn-true:focus{
+    color: #ffffff;
+}

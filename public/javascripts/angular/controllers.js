@@ -112,8 +112,13 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
 }])
 
 app.controller('signInCtrl',['$scope','$rootScope','$location','userService',function ($scope, $rootScope, $location, userService) {
+
+    $scope.submit=function () {
+        alert('sd')
+    }
+
     $scope.init=function () {
-      $rootScope.ifShowNavbar=false
+      $rootScope.ifShowNavbar=true
     }()
 }])
 
