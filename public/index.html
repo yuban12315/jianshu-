@@ -13,13 +13,14 @@
     <script src="javascripts/vendor/angular.min.js"></script>
     <script src="javascripts/vendor/angular-route.min.js"></script>
     <script src="javascripts/vendor/angular-css.min.js"></script>
+    <script src="javascripts/vendor/angular-local-storage.min.js"></script>
     <script src="javascripts/angular/services.js"></script>
     <script src="javascripts/angular/controllers.js"></script>
 
 </head>
 <body>
 <nav ng-controller="navCtrl" class="navbar navbar-default" role="navigation" id="header" ng-show="showNav()">
-    <div class="display" >
+    <div class="display">
         <div class="navbar-header">
             <!--导航栏-->
             <button class="navbar-toggle pull-left" data-toggle="collapse" data-target="#sg-header" id="collapse">
@@ -53,10 +54,11 @@
                        aria-expanded="false">{{username}} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="#"><i class="fa fa-user main-color"></i>&nbsp;&nbsp;&nbsp;我的主页</a></li>
-                        <li><a  ng-click="signOut()"><i class="fa fa-sign-out main-color"></i>&nbsp;&nbsp;&nbsp;退出</a></li>
+                        <li><a ng-click="signOut()"><i class="fa fa-sign-out main-color"></i>&nbsp;&nbsp;&nbsp;退出</a>
+                        </li>
                     </ul>
                 </li>
-                <li class="active"><a href="#/write" ><i class="fa fa-pencil main-color"></i>&nbsp;&nbsp;&nbsp;写文章</a>
+                <li class="active"><a href="#/write"><i class="fa fa-pencil main-color"></i>&nbsp;&nbsp;&nbsp;写文章</a>
                 </li>
             </ul>
         </div>

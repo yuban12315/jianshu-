@@ -116,9 +116,11 @@ router.post('/register', (req, res) => {
             })
         }
         else {
+            req.session.username=req.body.username
+            req.session.logged = true
             res.send({
                 status: true,
-                msg: 'register successfuly'
+                msg: 'register successfully'
             })
         }
     })

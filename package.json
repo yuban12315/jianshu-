@@ -10,6 +10,7 @@
   "dependencies": {
     "angular": "^1.6.4",
     "angular-css": "^1.0.8",
+    "angular-local-storage": "^0.6.0",
     "angular-route": "^1.6.4",
     "async": "^2.4.0",
     "body-parser": "~1.17.1",

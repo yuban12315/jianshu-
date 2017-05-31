@@ -34,7 +34,7 @@ myService.factory('userService', ['$q', '$http', ($q, $http) => {
 
         create(user_data) {
             let defer = $q.defer()
-            $http.post('users/create', user_data).then((result) => defer.resolve(result.data))
+            $http.post('users/register', user_data).then((result) => defer.resolve(result.data))
             return defer.promise
         }
 

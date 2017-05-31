@@ -5,7 +5,7 @@ class user_service {
     create(user_data, callback) {
         async.waterfall([
             (callback) => {
-                mysql.query('select from users where username= ?', user_data.username, (err, res) => {
+                mysql.query('select * from users where username= ?', user_data.username, (err, res) => {
                     if (err) {
                         callback(err)
                     }

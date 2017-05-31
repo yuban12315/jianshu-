@@ -9,15 +9,15 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
         alert('search')
     }
     //检查用户登录状态
-    $scope.checkSignIn=function () {
-        userService.checkLog().then((result)=>{
-            $rootScope.ifSignIn=result.logged
-            $rootScope.username=result.username
+    $scope.checkSignIn = function () {
+        userService.checkLog().then((result) => {
+            $rootScope.ifSignIn = result.logged
+            $rootScope.username = result.username
         })
     }
     //登出
-    $scope.signOut=function () {
-        userService.logout().then((result)=>{
+    $scope.signOut = function () {
+        userService.logout().then((result) => {
             console.log(result)
             $location.path('/')
             location.reload()
@@ -31,7 +31,6 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     }
 
 
-
     $scope.showNav = function () {
         return $rootScope.ifShowNavbar
     }
@@ -40,7 +39,7 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
         $scope.checkSignIn()
     });
 
-    $scope.init=function () {
+    $scope.init = function () {
 
     }()
 
@@ -104,7 +103,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 
 
     $scope.init = function () {
         console.log('main - init')
-        $rootScope.web_title='简书 - 创作你的创作'
+        $rootScope.web_title = '简书 - 创作你的创作'
         $scope.page = 1
         $rootScope.ifShowNavbar = true
         $scope.getPage()
@@ -139,28 +138,28 @@ app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService'
 
     $scope.submit = function () {
         console.log('submit form')
-        console.log('username',$scope.form.username.val)
-        console.log('password',$scope.form.password.val)
+        console.log('username', $scope.form.username.val)
+        console.log('password', $scope.form.password.val)
         userService.login({
-            username:$scope.form.username.val,
-            password:$scope.form.password.val
-        }).then((result)=>{
-            if(result.status){
-                $rootScope.username=$scope.form.username.val
-                $rootScope.ifSignIn=true
+            username: $scope.form.username.val,
+            password: $scope.form.password.val
+        }).then((result) => {
+            if (result.status) {
+                $rootScope.username = $scope.form.username.val
+                $rootScope.ifSignIn = true
                 $location.path('/')
             }
-            else{
-                $scope.error.status=true
-                $scope.error.msg=result.msg
+            else {
+                $scope.error.status = true
+                $scope.error.msg = result.msg
             }
         })
     }
-    $scope.blur_u=function () {
-        $scope.form.username.blur=true
+    $scope.blur_u = function () {
+        $scope.form.username.blur = true
     }
-    $scope.blur_p=function () {
-        $scope.form.password.blur=true
+    $scope.blur_p = function () {
+        $scope.form.password.blur = true
     }
     $scope.toSignUp = function () {
         $location.path('/signUp')
@@ -170,19 +169,19 @@ app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService'
         $rootScope.ifShowNavbar = true
         $rootScope.web_title = '登录 - 简书'
 
-        $scope.form={
-            username:{
-                val:'',
-                blur:false
+        $scope.form = {
+            username: {
+                val: '',
+                blur: false
             },
-            password:{
-                val:'',
-                blur:false
+            password: {
+                val: '',
+                blur: false
             }
         }
-        $scope.error={
-            status:false,
-            msg:''
+        $scope.error = {
+            status: false,
+            msg: ''
         }
     }()
 }])
@@ -190,7 +189,29 @@ app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService'
 app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
     $scope.submit = function () {
-        alert('ds')
+        console.log('submit form')
+        console.log('username', $scope.form.username.val)
+        console.log('password', $scope.form.password.val)
+        userService.create({
+            username: $scope.form.username.val,
+            password: $scope.form.password.val
+        }).then((result) => {
+            if (result.status) {
+                $rootScope.username = $scope.form.username.val
+                $rootScope.ifSignIn = true
+                $location.path('/')
+            }
+            else {
+                $scope.error.status = true
+                $scope.error.msg = result.msg
+            }
+        })
+    }
+    $scope.blur_u = function () {
+        $scope.form.username.blur = true
+    }
+    $scope.blur_p = function () {
+        $scope.form.password.blur = true
     }
     $scope.toSignIn = function () {
         $location.path('/signIn')
@@ -199,6 +220,21 @@ app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService'
     $scope.init = function () {
         $rootScope.ifShowNavbar = true
         $rootScope.web_title = '注册 - 简书'
+
+        $scope.form = {
+            username: {
+                val: '',
+                blur: false
+            },
+            password: {
+                val: '',
+                blur: false
+            }
+        }
+        $scope.error = {
+            status: false,
+            msg: ''
+        }
     }()
 }])
 
@@ -223,6 +259,7 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'signUpCtrl',
             css: 'page/signUp/signUp.css'
         })
+        .when('/write')
         .otherwise({
             redirectTo: '/'
         })
