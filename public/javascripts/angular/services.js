@@ -20,6 +20,11 @@ myService.factory('userService', ['$q', '$http', ($q, $http) => {
             return defer.promise
         }
 
+        checkLog(){
+            let defer=$q.defer()
+            $http.get('/users/check_login').then((result)=>defer.resolve(result.data))
+        }
+
         logout() {
             let defer = $q.defer()
             $http.post('/users/logout', {}).then((result) => defer.resolve(result.data))

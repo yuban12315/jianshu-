@@ -1,15 +1,21 @@
 let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS'])
 
 app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
-    $rootScope.web_title = '简书 - 创作你的创作'
-    $rootScope.ifSignIn = false
-    $rootScope.username = 'test_username'
-    $rootScope.ifShowNavbar = true
+
     $scope.ifSignIn = function () {
         return $rootScope.ifSignIn
     }
     $scope.search = function () {
         alert('search')
+    }
+    $scope.checkSignIn=function () {
+        console.log('checkSign')
+        userService.checkLog((result)=>{
+            console.log('sd')
+            console.log(result)
+            $rootScope.ifSignIn=result.logged
+            $rootScope.username=result.username
+        })
     }
     $scope.toSignIn = function () {
         $location.path('/signIn')
@@ -20,6 +26,17 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     $scope.showNav = function () {
         return $rootScope.ifShowNavbar
     }
+    $rootScope.$on('$routeChangeStart', function () {
+        $rootScope.web_title = '加载中';
+        $scope.checkSignIn()
+    });
+
+    $scope.init=function () {
+
+    }()
+
+
+
 }])
 
 app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService', function ($scope, $rootScope, $location, userService, articleService) {
@@ -79,8 +96,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 
     }
 
     $scope.init = function () {
-        console.clear()
         console.log('main - init')
+        $rootScope.web_title='简书 - 创作你的创作'
         $scope.page = 1
         $rootScope.ifShowNavbar = true
         $scope.getPage()
@@ -114,7 +131,29 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
 app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
     $scope.submit = function () {
-        alert('sd')
+        console.log('submit')
+        console.log('username',$scope.form.username.val)
+        console.log('password',$scope.form.password.val)
+        userService.login({
+            username:$scope.form.username.val,
+            password:$scope.form.password.val
+        }).then((result)=>{
+            if(result.status){
+                $rootScope.username=$scope.form.username.val
+                $rootScope.ifSignIn=true
+                $location.path('/')
+            }
+            else{
+                $scope.error.status=true
+                $scope.error.msg=result.msg
+            }
+        })
+    }
+    $scope.blur_u=function () {
+        $scope.form.username.blur=true
+    }
+    $scope.blur_p=function () {
+        $scope.form.password.blur=true
     }
     $scope.toSignUp = function () {
         $location.path('/signUp')
@@ -123,6 +162,21 @@ app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService'
     $scope.init = function () {
         $rootScope.ifShowNavbar = true
         $rootScope.web_title = '登录 - 简书'
+
+        $scope.form={
+            username:{
+                val:'',
+                blur:false
+            },
+            password:{
+                val:'',
+                blur:false
+            }
+        }
+        $scope.error={
+            status:false,
+            msg:''
+        }
     }()
 }])
 

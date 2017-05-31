@@ -9,13 +9,25 @@ router.get('/', function (req, res, next) {
     res.send('respond with a resource');
 });
 
+//检查登录状态，返回bool值和用户名
 router.get('/check_login', (req, res) => {
     let logged = !!req.session.logged
-    res.send({
-        logged
-    })
+
+    if(logged){
+        res.send({
+            logged,
+            username:req.session.username
+        })
+    }
+    else{
+        res.send({
+            logged,
+            username:''
+        })
+    }
 })
 
+//用户登录路由
 router.post('/login', (req, res) => {
     async.waterfall([
             (callback) => {
@@ -46,9 +58,8 @@ router.post('/login', (req, res) => {
                 })
             }
             else {
-                req.session.user_id = req.body.user_id
+                req.session.username=req.body.username
                 req.session.logged = true
-                console.log(req.session.id)
                 res.send({
                     status: true,
                     msg: 'login successfully'
@@ -194,5 +205,6 @@ router.get('/my_article',(req,res)=>{
             }
         })
 })
+
 
 module.exports = router
