@@ -8,13 +8,19 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     $scope.search = function () {
         alert('search')
     }
+    //检查用户登录状态
     $scope.checkSignIn=function () {
-        console.log('checkSign')
-        userService.checkLog((result)=>{
-            console.log('sd')
-            console.log(result)
+        userService.checkLog().then((result)=>{
             $rootScope.ifSignIn=result.logged
             $rootScope.username=result.username
+        })
+    }
+    //登出
+    $scope.signOut=function () {
+        userService.logout().then((result)=>{
+            console.log(result)
+            $location.path('/')
+            location.reload()
         })
     }
     $scope.toSignIn = function () {
@@ -23,6 +29,9 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     $scope.toSignUp = function () {
         $location.path('/signUp')
     }
+
+
+
     $scope.showNav = function () {
         return $rootScope.ifShowNavbar
     }
@@ -34,8 +43,6 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     $scope.init=function () {
 
     }()
-
-
 
 }])
 
@@ -131,7 +138,7 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
 app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
     $scope.submit = function () {
-        console.log('submit')
+        console.log('submit form')
         console.log('username',$scope.form.username.val)
         console.log('password',$scope.form.password.val)
         userService.login({
