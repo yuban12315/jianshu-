@@ -57,13 +57,19 @@ myService.factory('articleService', ['$q', '$http', ($q, $http) => {
     class articleService {
         create(article_data) {
             let defer = $q.defer()
-            $http.post('article/create', article_data).then((result) => defer.resolve(result.data))
+            $http.post('articles/create', article_data).then((result) => defer.resolve(result.data))
             return defer.promise
         }
 
         update(article_data) {
             let defer = $q.defer()
-            $http.post('article/update', article_data).then((result) => defer.resolve(result.data))
+            $http.post('articles/update', article_data).then((result) => defer.resolve(result.data))
+            return defer.promise
+        }
+
+        deleteThis(article_id){
+            let defer=$q.defer()
+            $http.post('articles/delete',{article_id:article_id}).then((result)=>defer.resolve(result.data))
             return defer.promise
         }
 

@@ -82,7 +82,7 @@ class article_service {
         ],(error)=>callback(error))
     }
 
-    delete(article_id, user_id, callback) {
+    delete_this(article_id, user_id, callback) {
         /*mysql.query('delete from articles where article_id=? and user_id=?',
          [article_id,user_id],(error)=>callback(error))*/
         async.waterfall([
@@ -112,7 +112,7 @@ class article_service {
     get_detail(article_id, callback) {
         async.waterfall([
             (callback) => {
-                mysql.query('select a.title,a.content,a.publish_date,a.user_id,u.username from users u,articles a where u.user_id=a.user_id and a.article_id= ?', article_id, (error, result) => {
+                mysql.query('select a.title,a.content,a.publish_date,a.user_id,a.article_id,u.username from users u,articles a where u.user_id=a.user_id and a.article_id= ?', article_id, (error, result) => {
                     if (error) {
                         callback(error)
                     }

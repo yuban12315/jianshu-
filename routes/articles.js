@@ -245,7 +245,7 @@ router.post('/delete', (req, res) => {
         (callback) => {
             let article_id = req.body.article_id
             let user_id = req.session.user_id
-            article_service.delete(article_id, user_id, (error) => {
+            article_service.delete_this(article_id, user_id, (error) => {
                 if (error) {
                     callback(error)
                 }
@@ -264,7 +264,7 @@ router.post('/delete', (req, res) => {
         else {
             res.send({
                 status: true,
-                msg: 'create article successfully'
+                msg: 'delete article successfully'
             })
         }
     })

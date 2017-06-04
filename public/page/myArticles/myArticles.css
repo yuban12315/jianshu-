@@ -1,28 +1,36 @@
 .myArticles {
-    height: 800px;
+    height: 900px;
+    overflow-y: hidden;
 }
 
 .myArticles .article-list {
-    position: relative;
     background-color: #3F3F3F;
+    position: relative;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     word-break: break-all;
     white-space: nowrap;
     text-overflow: ellipsis;
+    padding-right: 0;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 }
 
-.myArticles .back {
-    padding: 10px;
-    margin-top: 30px;
+.myArticles .buttons{
+
+}
+
+.myArticles .button {
+    margin-top: 10px;
     margin-bottom: 10px;
-    border: #ED705B 1px solid;
-    border-radius: 5px;
     color: #ED705B;
     text-align: center;
-    font-size: 16px;
     text-decoration: none;
     cursor: pointer;
+}
+
+.myArticles .articles{
+    border-top: 10px solid white;
+    padding-top: 10px;
 }
 
 .myArticles .article {
@@ -32,6 +40,7 @@
     color: white;
     cursor: pointer;
     font-size: 20px;
+    border-left: #3f3f3f 4px solid;
     /*transition: 0.2s linear;*/
 
 }
@@ -45,4 +54,64 @@
     border-left: #ED705B 4px solid;
 }
 
+.myArticles .article-detail{
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
 
+.myArticles .header {
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eeeeee;
+}
+.myArticles .title {
+    font-weight: 700;
+    font-size: 50px;
+    padding-bottom: 10px;
+}
+
+.myArticles .tools{
+    background-color:#EEE;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.myArticles .tool{
+    cursor: pointer;
+    text-align: center;
+    padding: 5px;
+}
+
+.myArticles .content {
+    font-size: 16px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.btn {
+    border-radius: 0;
+    padding: 6px;
+    outline: none !important;
+}
+
+.btn {
+    margin-top: 10px;
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+
+.btn-true {
+    background-color: #ED705B;
+    color: #ffffff;
+}
+
+.btn-true:hover {
+    color: #ffffff;
+}
+
+.btn-true:focus {
+    color: #ffffff;
+}
+
+.myArticles .default{
+    padding: 50px;
+}

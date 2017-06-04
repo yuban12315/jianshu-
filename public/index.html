@@ -15,6 +15,7 @@
     <script src="javascripts/vendor/angular-route.min.js"></script>
     <script src="javascripts/vendor/angular-css.min.js"></script>
     <script src="javascripts/vendor/angular-local-storage.min.js"></script>
+    <script src="javascripts/vendor/angular-cookies.min.js"></script>
     <script src="javascripts/angular/services.js"></script>
     <script src="javascripts/angular/controllers.js"></script>
 
@@ -59,14 +60,22 @@
                         </li>
                     </ul>
                 </li>
-                <li class="active"><a href="#/write"><i class="fa fa-pencil main-color"></i>&nbsp;&nbsp;&nbsp;写文章</a>
+                <li class="active" data-toggle="tooltip" data-placement="bottom" title="新建一篇文章"><a href="#/write"><i class="fa fa-pencil main-color"></i>&nbsp;&nbsp;&nbsp;写文章</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
+
 <div class="row">
     <div ng-view></div>
 </div>
+
 </body>
+
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 </html>

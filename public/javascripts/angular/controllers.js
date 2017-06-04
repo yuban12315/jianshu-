@@ -1,4 +1,4 @@
-let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS', 'LocalStorageModule'])
+let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS', 'LocalStorageModule','ngCookies'])
 
 app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
@@ -241,38 +241,57 @@ app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService'
     }()
 }])
 
-app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService', function ($scope, $rootScope, $location, userService, articleService) {
+app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService','$cookieStore','$sce', function ($scope, $rootScope, $location, userService, articleService,$cookieStore,$sce) {
 
-    $scope.toMainPage=function () {
+    $scope.toMainPage = function () {
         $location.path('/')
     }
-    $scope.getMyArticle = function () {
-        if(!$scope.haveArticles){
-            userService.getMyArticle().then((result) => {
-                if (result.status) {
-                    $scope.articles = result.data
-                    $scope.haveArticles=true
-                }
-            })
-        }
+    $scope.newArticle=function () {
+        $location.path('write')
+        $location.search({way:'new'})
     }
-    $scope.changeSize=function () {
-
-        window.onresize=function () {
-            let height=document.body.scrollHeight
-            $('.myArticles').css({height:height})
-            $('.article-list').css({height:height})
-            console.log(height)
-        }
+    $scope.editArticle=function(){
+        $location.path('write')
+        $cookieStore.put('edit_article_id',$scope.article.article_id)
+        $location.search({way:'edit',article_id:$scope.article.article_id})
     }
-    $scope.showDetail=function (index) {
-        console.log($scope.articles[index].article_id)
-        $location.search({article_id:$scope.articles[index].article_id})
-
-        articleService.get_detail($scope.articles[index].article_id).then((result)=>{
+    $scope.showDeleteModal=function () {
+        $('#modal-btn').click()
+    }
+    $scope.deleteArticle=function () {
+        console.log($scope.article)
+        articleService.deleteThis($scope.article.article_id).then((result)=>{
             if(result.status){
-                $scope.article=result.data
-                console.log($scope.article)
+                location.reload()
+            }
+            else{
+                alert(result.msg)
+            }
+        })
+    }
+    $scope.getMyArticle = function () {
+        userService.getMyArticle().then((result) => {
+            if (result.status) {
+                $scope.articles = result.data
+            }
+        })
+    }
+    $scope.changeSize = function () {
+        window.onresize = function () {
+            let height = document.body.scrollHeight
+            $('.myArticles').css({height: height})
+            $('.article-list').css({height: height})
+            $('.article-detail').css({height: height})
+        }
+    }
+    $scope.showDetail = function (index) {
+        articleService.get_detail($scope.articles[index].article_id).then((result) => {
+            if (result.status) {
+                result.data.content = $sce.trustAsHtml(result.data.content)
+                $scope.article = result.data
+                $scope.showPage=true
+                $cookieStore.remove('article_id')
+                $cookieStore.put('article_id',$scope.articles[index].article_id)
             }
         })
 
@@ -280,18 +299,41 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
         $(`#${index}`).addClass('active-')
         console.log()
     }
+    $scope.getPrevious=function (article_id) {
+        articleService.get_detail(article_id).then((result)=>{
+            if(result.status){
+                result.data.content = $sce.trustAsHtml(result.data.content)
+                $scope.article=result.data
+            }
+        })
+    }
     $scope.init = function () {
         $rootScope.web_title = '我的主页 - 简书'
         $rootScope.ifShowNavbar = false
-        let height=document.body.scrollHeight
-        $('.myArticles').css({height:height})
-        $('.article-list').css({height:height})
+        let height = document.body.scrollHeight
+        $('.myArticles').css({height: height})
+        $('.article-list').css({height: height})
+        $('.article-detail').css({height: height})
         //$scope.
         $scope.getMyArticle()
         $scope.changeSize()
-
+        if($cookieStore.get('article_id')!==undefined){
+            $scope.showPage=true
+            $scope.getPrevious($cookieStore.get('article_id'))
+        }
+        else {
+            $scope.showPage=false
+        }
     }()
 
+}])
+
+app.controller('writeCtrl',['$scope','$rootScope','$location','userService','articleService','$cookieStore','$sce',function ($scope, $rootScope, $location, userService, articleService,$cookieStore,$sce) {
+    $scope.init=function () {
+       console.log('test')
+        $rootScope.web_title='简书 - 文章编辑'
+        $rootScope.ifShowNavbar=false
+    }()
 }])
 
 app.config(['$routeProvider', function ($routeProvider) {
@@ -325,8 +367,13 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'myArticlesCtrl',
             css: 'page/myArticles/myArticles.css'
         })
-        .otherwise({
-            redirectTo: '/'
+        .when('/write',{
+            templateUrl: "page/write/write.html",
+            controller: 'writeCtrl',
+            css: 'page/write/write.css'
         })
+        // .otherwise({
+        //     redirectTo: '/'
+        // })
 
 }])
