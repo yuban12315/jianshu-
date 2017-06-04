@@ -43,7 +43,7 @@ router.get('/detail', (req, res) => {
             (callback) => {
                 user_service.view({
                     user_id: req.session.user_id,
-                    article_id
+                    article_id:article_id
                 }, (error) => {
                     if (error) {
                         callback(error)

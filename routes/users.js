@@ -16,7 +16,8 @@ router.get('/check_login', (req, res) => {
     if(logged){
         res.send({
             logged,
-            username:req.session.username
+            username:req.session.username,
+            user_id:req.session.user_id
         })
     }
     else{
@@ -45,12 +46,22 @@ router.post('/login', (req, res) => {
                         callback(error)
                     }
                     else {
-                        callback(null)
+                        callback(null,user_data.username)
+                    }
+                })
+            },
+            (username,callback)=>{
+                user_service.get_id_by_name(username,(error,result)=>{
+                    if (error) {
+                        callback(error)
+                    }
+                    else{
+                        callback(null,result.user_id)
                     }
                 })
             }
         ],
-        (error) => {
+        (error,user_id) => {
             if (error) {
                 res.send({
                     status: false,
@@ -60,6 +71,7 @@ router.post('/login', (req, res) => {
             else {
                 req.session.username=req.body.username
                 req.session.logged = true
+                req.session.user_id=user_id
                 res.send({
                     status: true,
                     msg: 'login successfully'
@@ -104,7 +116,17 @@ router.post('/register', (req, res) => {
                     callback(error)
                 }
                 else {
-                    callback(null)
+                    callback(null,user_data.username)
+                }
+            })
+        },
+        (username,callback)=>{
+            user_service.get_id_by_name(username,(error,result)=>{
+                if (error) {
+                    callback(error)
+                }
+                else{
+                    callback(null,result.data.user_id)
                 }
             })
         }
@@ -206,6 +228,32 @@ router.get('/my_article',(req,res)=>{
                 })
             }
         })
+})
+
+router.get('/get_name_by_id',(req,res)=>{
+    let username
+    if(!req.query.username) username='admin1'
+    else username=req.query.username
+    async.waterfall([
+        (callback)=>{
+            user_service.get_id_by_name(username,(error,result)=>callback(error,result))
+        }
+    ],(error, result) => {
+        if (error) {
+            res.send({
+                status: false,
+                msg: error.message,
+                data: null
+            })
+        }
+        else {
+            res.send({
+                status: true,
+                msg: null,
+                data: result
+            })
+        }
+    })
 })
 
 

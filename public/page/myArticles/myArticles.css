@@ -1,0 +1,48 @@
+.myArticles {
+    height: 800px;
+}
+
+.myArticles .article-list {
+    position: relative;
+    background-color: #3F3F3F;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    word-break: break-all;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.myArticles .back {
+    padding: 10px;
+    margin-top: 30px;
+    margin-bottom: 10px;
+    border: #ED705B 1px solid;
+    border-radius: 5px;
+    color: #ED705B;
+    text-align: center;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.myArticles .article {
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    /*transition: 0.2s linear;*/
+
+}
+
+.myArticles .article:hover {
+    background-color: #646464;
+    border-left: #ED705B 4px solid;
+}
+.myArticles .active-{
+    background-color: #646464;
+    border-left: #ED705B 4px solid;
+}
+
+

@@ -29,7 +29,7 @@ class user_service {
     }
 
     login(user_data, callback) {
-        mysql.query('select * from users where username =? and password= ?', [user_data.username, user_data.password], (err, res) => {
+        mysql.query('select username from users where username =? and password= ?', [user_data.username, user_data.password], (err, res) => {
             if (err) {
                 callback(err)
             }
@@ -45,10 +45,46 @@ class user_service {
     }
 
     view(data, callback) {
-        mysql.query('insert into views set ?', {
-            user_id: data.user_id,
-            article_id: data.article_id
-        }, (error) => callback(error))
+        // mysql.query('insert into views set ?', {
+        //     user_id: data.user_id,
+        //     article_id: data.article_id
+        // }, (error) => callback(error))
+        async.waterfall([
+            (callback) => {
+                mysql.query('select user_id from views where user_id = ? and article_id = ?',
+                    [data.user_id,data.article_id], (err, res) => {
+                        if (err) {
+                            callback(err)
+                        }
+                        else if (res.length == 0) {
+                            callback(null, true)
+                        }
+                        else {
+                            callback(null, false)
+                        }
+                    })
+            },
+            (flag, callback) => {
+                if (flag) {
+                    mysql.query('insert into views set ?', {
+                        user_id: data.user_id,
+                        article_id: data.article_id
+                    }, (err, res) => {
+                        if (err) {
+                            callback(err)
+                        }
+                        else {
+                            callback(null, res)
+                        }
+                    })
+                }
+                else {
+                    callback(null)
+                }
+            }
+        ], (error, result) => {
+            callback(error)
+        })
     }
 
     get_view_history(user_id, callback) {
@@ -65,7 +101,7 @@ class user_service {
     get_my_article(user_id, callback) {
         async.waterfall([
             (callback) => {
-                mysql.query('select article_id,user_id,title from articles where user_id= ? ', user_id, (error, result) => {
+                mysql.query('select article_id,title,publish_date from articles where user_id= ? ', user_id, (error, result) => {
                     if (error) {
                         callback(error)
                     }
@@ -112,5 +148,19 @@ class user_service {
     //         }
     //     ],(error,result)=>callback(error,result))
     // }
+    get_id_by_name(username, callback) {
+        async.waterfall([
+            (callback) => {
+                mysql.query('select user_id from users where username=?', username, (error, result) => {
+                    if (error) {
+                        callback(error)
+                    }
+                    else {
+                        callback(null, result[0])
+                    }
+                })
+            }
+        ], (error, result) => callback(error, result))
+    }
 }
 module.exports = new user_service()

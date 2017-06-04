@@ -46,7 +46,7 @@ myService.factory('userService', ['$q', '$http', ($q, $http) => {
 
         getMyArticle() {
             let defer = $q.defer()
-            $http.post('/users/')
+            $http.get('/users/my_article').then((result)=>defer.resolve(result.data))
             return defer.promise
         }
     }

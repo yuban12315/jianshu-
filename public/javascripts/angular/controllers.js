@@ -1,4 +1,4 @@
-let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS'])
+let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS', 'LocalStorageModule'])
 
 app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
@@ -23,13 +23,16 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
             location.reload()
         })
     }
+
     $scope.toSignIn = function () {
         $location.path('/signIn')
     }
     $scope.toSignUp = function () {
         $location.path('/signUp')
     }
-
+    $scope.toMyArticles = function () {
+        $location.path('/myArticles')
+    }
 
     $scope.showNav = function () {
         return $rootScope.ifShowNavbar
@@ -122,7 +125,7 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
             result.data.content = $sce.trustAsHtml(result.data.content)
             $scope.article = result.data
             $scope.article.publish_date = articleService.setDate($scope.article.publish_date, 1)
-            $rootScope.web_title = $scope.article.title + ' -简书'
+            $rootScope.web_title = $scope.article.title + ' - 简书'
         })
     }
 
@@ -238,29 +241,92 @@ app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService'
     }()
 }])
 
+app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService', function ($scope, $rootScope, $location, userService, articleService) {
+
+    $scope.toMainPage=function () {
+        $location.path('/')
+    }
+    $scope.getMyArticle = function () {
+        if(!$scope.haveArticles){
+            userService.getMyArticle().then((result) => {
+                if (result.status) {
+                    $scope.articles = result.data
+                    $scope.haveArticles=true
+                }
+            })
+        }
+    }
+    $scope.changeSize=function () {
+
+        window.onresize=function () {
+            let height=document.body.scrollHeight
+            $('.myArticles').css({height:height})
+            $('.article-list').css({height:height})
+            console.log(height)
+        }
+    }
+    $scope.showDetail=function (index) {
+        console.log($scope.articles[index].article_id)
+        $location.search({article_id:$scope.articles[index].article_id})
+
+        articleService.get_detail($scope.articles[index].article_id).then((result)=>{
+            if(result.status){
+                $scope.article=result.data
+                console.log($scope.article)
+            }
+        })
+
+        $('.article').removeClass('active-')
+        $(`#${index}`).addClass('active-')
+        console.log()
+    }
+    $scope.init = function () {
+        $rootScope.web_title = '我的主页 - 简书'
+        $rootScope.ifShowNavbar = false
+        let height=document.body.scrollHeight
+        $('.myArticles').css({height:height})
+        $('.article-list').css({height:height})
+        //$scope.
+        $scope.getMyArticle()
+        $scope.changeSize()
+
+    }()
+
+}])
+
 app.config(['$routeProvider', function ($routeProvider) {
+    //主界面，显示已发布文章列表
     $routeProvider.when('/', {
         templateUrl: "page/main/main.html",
         controller: 'mainCtrl',
         css: 'page/main/main.css'
     })
+    //文章详情页
         .when('/detail', {
             templateUrl: "page/detail/detail.html",
             controller: 'detailCtrl',
             css: 'page/detail/detail.css'
         })
+        //登录页
         .when('/signIn', {
             templateUrl: "page/signIn/signIn.html",
             controller: 'signInCtrl',
             css: 'page/signIn/signIn.css'
         })
+        //注册页
         .when('/signUp', {
             templateUrl: "page/signUp/signUp.html",
             controller: 'signUpCtrl',
             css: 'page/signUp/signUp.css'
         })
-        .when('/write')
+        //
+        .when('/myArticles', {
+            templateUrl: "page/myArticles/myArticles.html",
+            controller: 'myArticlesCtrl',
+            css: 'page/myArticles/myArticles.css'
+        })
         .otherwise({
             redirectTo: '/'
         })
+
 }])

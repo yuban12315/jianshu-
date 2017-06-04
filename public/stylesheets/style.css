@@ -5,6 +5,7 @@
 }
 ul>li{
     margin-left: 5px;
+    cursor: pointer;
 }
 
 .main-color {
@@ -60,4 +61,11 @@ ul>li{
 
 .sign-up{
 
+}
+
+.noPadding{
+    padding: 0;
+}
+.no-margin{
+    margin: 0;
 }

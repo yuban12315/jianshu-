@@ -10,6 +10,7 @@
     <link href="stylesheets/font-awesome.min.css" rel="stylesheet">
     <script src="javascripts/vendor/jquery.min.js"></script>
     <script src="javascripts/vendor/bootstrap.min.js"></script>
+    <script src="javascripts/vendor/marked.min.js"></script>
     <script src="javascripts/vendor/angular.min.js"></script>
     <script src="javascripts/vendor/angular-route.min.js"></script>
     <script src="javascripts/vendor/angular-css.min.js"></script>
@@ -53,7 +54,7 @@
                     <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">{{username}} <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="#"><i class="fa fa-user main-color"></i>&nbsp;&nbsp;&nbsp;我的主页</a></li>
+                        <li><a ng-click="toMyArticles()"><i class="fa fa-user main-color"></i>&nbsp;&nbsp;&nbsp;我发布的文章</a></li>
                         <li><a ng-click="signOut()"><i class="fa fa-sign-out main-color"></i>&nbsp;&nbsp;&nbsp;退出</a>
                         </li>
                     </ul>
