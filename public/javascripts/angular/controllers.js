@@ -92,6 +92,8 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 
                 $scope.nextPage = result.data.next_page
                 for (let i in $scope.articles) {
                     $scope.articles[i].publish_date = articleService.setDate($scope.articles[i].publish_date)
+                    $scope.articles[i].content=marked($scope.articles[i].content).replace(/<.*?>/g,"")
+                    //result[i].content=result[i].content.replace(/<.*?>/g,"")
                 }
             }
             else {
@@ -122,7 +124,7 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
         }
         else $scope.id = $location.search().id
         articleService.get_detail($scope.id).then((result) => {
-            result.data.content = $sce.trustAsHtml(result.data.content)
+            result.data.content = $sce.trustAsHtml(marked(result.data.content))
             $scope.article = result.data
             $scope.article.publish_date = articleService.setDate($scope.article.publish_date, 1)
             $rootScope.web_title = $scope.article.title + ' - 简书'
@@ -287,7 +289,7 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
     $scope.showDetail = function (index) {
         articleService.get_detail($scope.articles[index].article_id).then((result) => {
             if (result.status) {
-                result.data.content = $sce.trustAsHtml(result.data.content)
+                result.data.content = $sce.trustAsHtml(marked(result.data.content))
                 $scope.article = result.data
                 $scope.showPage=true
                 $cookieStore.remove('article_id')
@@ -302,7 +304,7 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
     $scope.getPrevious=function (article_id) {
         articleService.get_detail(article_id).then((result)=>{
             if(result.status){
-                result.data.content = $sce.trustAsHtml(result.data.content)
+                result.data.content = $sce.trustAsHtml(marked(result.data.content))
                 $scope.article=result.data
             }
         })
@@ -329,10 +331,24 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
 }])
 
 app.controller('writeCtrl',['$scope','$rootScope','$location','userService','articleService','$cookieStore','$sce',function ($scope, $rootScope, $location, userService, articleService,$cookieStore,$sce) {
+
+    $scope.getArticle=function (article_id) {
+        if(article_id){
+            articleService.get_detail(article_id).then((result)=>{
+                if(result.status){
+                    $scope.article=result.data
+                    console.log($scope.article)
+                }
+            })
+        }
+    }
+
     $scope.init=function () {
-       console.log('test')
         $rootScope.web_title='简书 - 文章编辑'
         $rootScope.ifShowNavbar=false
+        let data=$location.search()
+        $scope.way=data.way
+       $scope.getArticle(data.article_id)
     }()
 }])
 
@@ -361,7 +377,6 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'signUpCtrl',
             css: 'page/signUp/signUp.css'
         })
-        //
         .when('/myArticles', {
             templateUrl: "page/myArticles/myArticles.html",
             controller: 'myArticlesCtrl',
@@ -372,8 +387,8 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'writeCtrl',
             css: 'page/write/write.css'
         })
-        // .otherwise({
-        //     redirectTo: '/'
-        // })
+         .otherwise({
+             redirectTo: '/'
+         })
 
 }])

@@ -19,13 +19,13 @@ class article_service {
 
     create(article_data, callback) {
         async.waterfall([
+            // (callback) => {
+            //     this.to_html(article_data.content, (error, result) => {
+            //         callback(error, result)
+            //     })
+            // },
             (callback) => {
-                this.to_html(article_data.content, (error, result) => {
-                    callback(error, result)
-                })
-            },
-            (html, callback) => {
-                article_data.content = html
+                // article_data.content = html
                 article_data.published = 0
                 article_data.publish_date = new Date()
                 mysql.query('insert into articles set ?', {
@@ -41,13 +41,13 @@ class article_service {
 
     update(article_data, callback) {
         async.waterfall([
+            // (callback) => {
+            //     this.to_html(article_data.content, (error, result) => {
+            //         callback(error, result)
+            //     })
+            // },
             (callback) => {
-                this.to_html(article_data.content, (error, result) => {
-                    callback(error, result)
-                })
-            },
-            (html, callback) => {
-                article_data.content = html
+                // article_data.content = html
                 mysql.query('update articles set ? where article_id=? and user_id=?', [{
                     title: article_data.title,
                     content: article_data.content
@@ -112,7 +112,7 @@ class article_service {
     get_detail(article_id, callback) {
         async.waterfall([
             (callback) => {
-                mysql.query('select a.title,a.content,a.publish_date,a.user_id,a.article_id,u.username from users u,articles a where u.user_id=a.user_id and a.article_id= ?', article_id, (error, result) => {
+                mysql.query('select a.title,a.content,a.publish_date,a.user_id,a.article_id,u.username from users u,articles a where u.user_id=a.user_id and a.article_id= ? and published = 1', article_id, (error, result) => {
                     if (error) {
                         callback(error)
                     }
@@ -169,7 +169,7 @@ class article_service {
                         }
                         for(let i in result){
                             result[i].content=result[i].content.slice(0,200)+'...'
-                            result[i].content=result[i].content.replace(/<.*?>/g,"")
+
                         }
                         data.article_list = result
                         callback(null, data)
