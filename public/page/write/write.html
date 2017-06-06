@@ -1,1 +1,32 @@
-sdsdsdsd
+<div class="write">
+    <!--文本编辑器部分-->
+    <div class="col-xs-6" id="editor">
+        <input class="col-xs-12 title" ng-model="article.title" name="title" id="articleTitle">
+        <div class="col-xs-12 btns">
+            <div class="pull-left">
+                <i class="fa fa-mail-reply btn-" data-toggle="tooltip" data-placement="top"
+                   title="返回上一页" ng-click="back()"> 返回</i>
+            </div>
+            <div class="pull-right">
+                <i class="btn- fa fa-save" data-toggle="tooltip" data-placement="top"
+                   title="保存" ng-show="!published" ng-click="saveArticle()"></i>
+                <i class="btn- fa fa-mail-forward" data-toggle="tooltip" data-placement="top"
+                   title="发布到简书" ng-show="!ifEdit||!published" ng-click="publishArticle()"> 发布文章</i>
+                <i class="btn- fa fa-refresh "data-toggle="tooltip" data-placement="top"
+                title="发布更新" ng-show="published" ng-click="updateArticle()"> 发布更新</i>
+                <span class="btn--" ng-show="published">已发布</span>
+            </div>
+        </div>
+        <textarea class="col-xs-12 content" spellcheck="false" ng-model="article.content" id="articleContent"></textarea>
+    </div>
+    <!--文本实时显示部分-->
+    <div class="col-xs-6" id="markDown">
+        <h1 class="col-xs-12 title">{{articleCopy.title}}</h1>
+        <article class="col-xs-12 content" ng-bind-html="articleCopy.content"></article>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>

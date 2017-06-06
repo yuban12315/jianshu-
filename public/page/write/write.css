@@ -1,0 +1,49 @@
+.write{
+    overflow: hidden;
+    height: 600px;
+}
+.write #editor{
+    border-right: 1px solid #d9d9d9;
+    padding-right: 0;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+.write #editor .title{
+    font-size: 30px;
+    padding: 10px 30px 10px 40px;
+    line-height: 30px;
+    border: 0;
+}
+.write #editor .title,.write #editor .content:focus{
+    outline: none;
+}
+
+.write #editor .btns{
+    background-color: #DEDEDE;
+    padding: 0;
+}
+.write #editor .btn-{
+    padding: 10px;
+}
+.write #editor .btn--{
+    padding: 10px;
+}
+.write #editor .btn-:hover{
+    background-color: #555555;
+    color: white;
+}
+.write #editor .content{
+    resize: none;
+    height: 600px;
+    padding: 20px 20px 20px 20px;
+    border: 0;
+    overflow-y: auto;
+    font-size: 16px;
+}
+.write #markDown{
+    position: relative;
+    overflow-x: hidden;
+    overflow-y: auto;
+    font-size: 16px;
+    background-color: #FCFAF2;
+}

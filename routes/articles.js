@@ -43,7 +43,7 @@ router.get('/detail', (req, res) => {
             (callback) => {
                 user_service.view({
                     user_id: req.session.user_id,
-                    article_id:article_id
+                    article_id: article_id
                 }, (error) => {
                     if (error) {
                         callback(error)
@@ -98,6 +98,33 @@ router.get('/detail', (req, res) => {
             }
         })
     }
+})
+
+router.get('/detail_free', (req, res) => {
+    let article_id
+    if (!req.query.id) {
+        article_id = 1
+    }
+    else {
+        article_id = req.query.id
+    }
+    article_service.get_detail_without_publish(article_id, (error, result) => {
+        if (error) {
+            res.send({
+                status: false,
+                msg: error.message,
+                data: null
+            })
+        }
+        else {
+            res.send({
+                status: true,
+                msg: null,
+                data: result
+            })
+        }
+    })
+
 })
 
 router.get('/search', (req, res) => {
@@ -167,26 +194,28 @@ router.post('/create', (req, res) => {
             }
         },
         (article_data, callback) => {
-            article_service.create(article_data, (error) => {
+            article_service.create(article_data, (error,result) => {
                 if (error) {
                     callback(error)
                 }
                 else {
-                    callback(null)
+                    callback(null,result)
                 }
             })
         }
-    ], (error) => {
+    ], (error,result) => {
         if (error) {
             res.send({
                 status: false,
-                msg: error.message
+                msg: error.message,
+                data:null
             })
         }
         else {
             res.send({
                 status: true,
-                msg: 'create article successfully'
+                msg: 'create article successfully',
+                data:result.insertId
             })
         }
     })
@@ -225,7 +254,7 @@ router.post('/publish', (req, res) => {
         else {
             res.send({
                 status: true,
-                msg: 'create article successfully'
+                msg: 'publish article successfully'
             })
         }
     })
@@ -313,7 +342,7 @@ router.post('/update', (req, res) => {
         else {
             res.send({
                 status: true,
-                msg: 'create article successfully'
+                msg: 'update article successfully'
             })
         }
     })

@@ -34,9 +34,9 @@ class article_service {
                     published: article_data.published,
                     publish_date: article_data.publish_date,
                     user_id: article_data.user_id
-                }, (error) => callback(error))
-            }
-        ], (error) => callback(error))
+                }, (error,result) => callback(error,result))
+            },
+        ], (error,result) => callback(error,result))
     }
 
     update(article_data, callback) {
@@ -59,27 +59,32 @@ class article_service {
     publish(article_id, user_id, callback) {
         async.waterfall([
             (callback) => {
-                mysql.query('select article_id from articles where article_id=? and user_id=?', [article_id, user_id],
+                mysql.query('select article_id from articles where article_id = ? and user_id = ?', [article_id, user_id],
                     (error, result) => {
                         if (error) {
                             callback(error)
                         }
-                        else{
-                            if(result.length===0){
+                        else {
+                            if (result.length === 0) {
                                 callback(new Error('该文章不存在'))
                             }
-                            else{
+                            else {
                                 callback(null)
                             }
                         }
                     })
             },
-            (callback)=>{
-                mysql.query('update articles set ? where article_id=?', {
-                    published: 1
-                }, [article_id, user_id], (error) => callback(error))
+            (callback) => {
+                mysql.query('update articles set published= ? where article_id=?', [1,article_id], (error) => {
+                    if(error){
+                        callback(error)
+                    }
+                    else{
+                        callback(null)
+                    }
+                })
             }
-        ],(error)=>callback(error))
+        ], (error) => callback(error))
     }
 
     delete_this(article_id, user_id, callback) {
@@ -92,21 +97,21 @@ class article_service {
                         if (error) {
                             callback(error)
                         }
-                        else{
-                            if(result.length===0){
+                        else {
+                            if (result.length === 0) {
                                 callback(new Error('该文章不存在'))
                             }
-                            else{
+                            else {
                                 callback(null)
                             }
                         }
                     })
             },
-            (callback)=>{
+            (callback) => {
                 mysql.query('delete from articles where article_id=? and user_id=?',
-                    [article_id,user_id],(error)=>callback(error))
+                    [article_id, user_id], (error) => callback(error))
             }
-        ],(error)=>callback(error))
+        ], (error) => callback(error))
     }
 
     get_detail(article_id, callback) {
@@ -140,12 +145,43 @@ class article_service {
         ], (error, result) => callback(error, result))
     }
 
+    get_detail_without_publish(article_id, callback) {
+        async.waterfall([
+            (callback) => {
+                mysql.query('select a.title,a.content,a.publish_date,a.published,a.user_id,a.article_id,u.username from users u,articles a where u.user_id=a.user_id and a.article_id= ?', article_id, (error, result) => {
+                    if (error) {
+                        callback(error)
+                    }
+                    else {
+                        if (result.length === 0) {
+                            callback(new Error('该文章不存在'))
+                        }
+                        else {
+                            callback(null, result[0])
+                        }
+                    }
+                })
+            },
+            (data, callback) => {
+                mysql.query('select count(*)"num" from views where article_id = ?', article_id, (error, result) => {
+                    if (error) {
+                        callback(error)
+                    }
+                    else {
+                        data.views = result[0].num
+                        callback(null, data)
+                    }
+                })
+            },
+        ], (error, result) => callback(error, result))
+    }
+
     get_page(page, callback) {
         let article_num = 5
         async.waterfall([
             (callback) => {
                 let num = (page - 1) * article_num;
-                mysql.query('select count(*)"num" from articles where published =?',1, (error, result) => {
+                mysql.query('select count(*)"num" from articles where published =?', 1, (error, result) => {
                     if (error) {
                         callback(error)
                     }
@@ -159,7 +195,7 @@ class article_service {
             },
             (next_page, callback) => {
                 let num = (page - 1) * article_num;
-                mysql.query('select a.article_id,title,content,username,publish_date from articles a,users u where a.user_id = u.user_id and a.published=? limit ?,?', [1,num, article_num], (error, result) => {
+                mysql.query('select a.article_id,title,content,username,publish_date from articles a,users u where a.user_id = u.user_id and a.published=? limit ?,?', [1, num, article_num], (error, result) => {
                     if (error) {
                         callback(error)
                     }
@@ -167,8 +203,8 @@ class article_service {
                         let data = {
                             next_page
                         }
-                        for(let i in result){
-                            result[i].content=result[i].content.slice(0,200)+'...'
+                        for (let i in result) {
+                            result[i].content = result[i].content.slice(0, 200) + '...'
 
                         }
                         data.article_list = result

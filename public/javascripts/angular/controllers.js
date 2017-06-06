@@ -1,4 +1,4 @@
-let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS', 'LocalStorageModule','ngCookies'])
+let app = angular.module('main', ['ngRoute', 'myService', 'angularCSS', 'LocalStorageModule', 'ngCookies'])
 
 app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
@@ -33,7 +33,10 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     $scope.toMyArticles = function () {
         $location.path('/myArticles')
     }
-
+    $scope.newArticle = function () {
+        $location.path('write')
+        $location.search({way: 'new'})
+    }
     $scope.showNav = function () {
         return $rootScope.ifShowNavbar
     }
@@ -92,7 +95,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 
                 $scope.nextPage = result.data.next_page
                 for (let i in $scope.articles) {
                     $scope.articles[i].publish_date = articleService.setDate($scope.articles[i].publish_date)
-                    $scope.articles[i].content=marked($scope.articles[i].content).replace(/<.*?>/g,"")
+                    $scope.articles[i].content = marked($scope.articles[i].content).replace(/<.*?>/g, "")
                     //result[i].content=result[i].content.replace(/<.*?>/g,"")
                 }
             }
@@ -243,30 +246,30 @@ app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService'
     }()
 }])
 
-app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService','$cookieStore','$sce', function ($scope, $rootScope, $location, userService, articleService,$cookieStore,$sce) {
+app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService', '$cookieStore', '$sce', function ($scope, $rootScope, $location, userService, articleService, $cookieStore, $sce) {
 
     $scope.toMainPage = function () {
         $location.path('/')
     }
-    $scope.newArticle=function () {
+    $scope.newArticle = function () {
         $location.path('write')
-        $location.search({way:'new'})
+        $location.search({way: 'new'})
     }
-    $scope.editArticle=function(){
+    $scope.editArticle = function () {
         $location.path('write')
-        $cookieStore.put('edit_article_id',$scope.article.article_id)
-        $location.search({way:'edit',article_id:$scope.article.article_id})
+        $cookieStore.put('edit_article_id', $scope.article.article_id)
+        $location.search({way: 'edit', article_id: $scope.article.article_id})
     }
-    $scope.showDeleteModal=function () {
+    $scope.showDeleteModal = function () {
         $('#modal-btn').click()
     }
-    $scope.deleteArticle=function () {
+    $scope.deleteArticle = function () {
         console.log($scope.article)
-        articleService.deleteThis($scope.article.article_id).then((result)=>{
-            if(result.status){
+        articleService.deleteThis($scope.article.article_id).then((result) => {
+            if (result.status) {
                 location.reload()
             }
-            else{
+            else {
                 alert(result.msg)
             }
         })
@@ -287,13 +290,13 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
         }
     }
     $scope.showDetail = function (index) {
-        articleService.get_detail($scope.articles[index].article_id).then((result) => {
+        articleService.get_detail_free($scope.articles[index].article_id).then((result) => {
             if (result.status) {
                 result.data.content = $sce.trustAsHtml(marked(result.data.content))
                 $scope.article = result.data
-                $scope.showPage=true
+                $scope.showPage = true
                 $cookieStore.remove('article_id')
-                $cookieStore.put('article_id',$scope.articles[index].article_id)
+                $cookieStore.put('article_id', $scope.articles[index].article_id)
             }
         })
 
@@ -301,11 +304,11 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
         $(`#${index}`).addClass('active-')
         console.log()
     }
-    $scope.getPrevious=function (article_id) {
-        articleService.get_detail(article_id).then((result)=>{
-            if(result.status){
+    $scope.getPrevious = function (article_id) {
+        articleService.get_detail_free(article_id).then((result) => {
+            if (result.status) {
                 result.data.content = $sce.trustAsHtml(marked(result.data.content))
-                $scope.article=result.data
+                $scope.article = result.data
             }
         })
     }
@@ -319,37 +322,155 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
         //$scope.
         $scope.getMyArticle()
         $scope.changeSize()
-        if($cookieStore.get('article_id')!==undefined){
-            $scope.showPage=true
+        if ($cookieStore.get('article_id') !== undefined) {
+            $scope.showPage = true
             $scope.getPrevious($cookieStore.get('article_id'))
         }
         else {
-            $scope.showPage=false
+            $scope.showPage = false
         }
     }()
 
 }])
 
-app.controller('writeCtrl',['$scope','$rootScope','$location','userService','articleService','$cookieStore','$sce',function ($scope, $rootScope, $location, userService, articleService,$cookieStore,$sce) {
+app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService', 'articleService', '$cookieStore', '$sce', function ($scope, $rootScope, $location, userService, articleService, $cookieStore, $sce) {
 
-    $scope.getArticle=function (article_id) {
-        if(article_id){
-            articleService.get_detail(article_id).then((result)=>{
-                if(result.status){
-                    $scope.article=result.data
-                    console.log($scope.article)
+    $scope.back=function () {
+        history.go(-1)
+    }
+
+    $scope.getArticle = function (article_id) {
+        if (article_id) {
+            articleService.get_detail_free(article_id).then((result) => {
+                if (result.status) {
+                    $scope.article = result.data
+                    if(result.data.published==1){
+                        $scope.published=true
+                    }
+                    else{
+                        $scope.published=false
+                    }
+
+                    // $scope.articleCopy=result.data
+                    $scope.articleCopy={}
+                    Object.assign($scope.articleCopy,result.data)
+                    // let content=result.data.content.toString().repeat(1)
+                    // $scope.articleCopy.content=$sce.trustAsHtml(marked(content))
+                    $scope.articleCopy.content=$sce.trustAsHtml(marked($scope.articleCopy.content))
+                    console.log($scope.articleCopy)
+                    $scope.$watch('article.title',(newValue,oldValue)=>{
+                        // console.log(newValue)
+                        $('.fa-refresh')[0].innerHTML=' 发布更新'
+                        $('.fa-mail-forward')[0].innerHTML=' 发布文章'
+                        $scope.articleCopy.title=newValue
+                    })
+                    $scope.$watch('article.content',(newValue,oldValue)=>{
+                        //console.log(newValue)
+                        $('.fa-refresh')[0].innerHTML=' 发布更新'
+                        $('.fa-mail-forward')[0].innerHTML=' 发布文章'
+                        $scope.articleCopy.content=$sce.trustAsHtml(marked(newValue))
+                    })
+                    // console.log(content)
                 }
             })
         }
     }
+    $scope.changeSize=function () {
+        let height = document.body.scrollHeight
+        $('.write').css({height: height})
+        $('#editor').css({height: height})
+        $('#articleContent').css({height: height-90})
+        $('#markDown').css({height: height})
+        window.onresize=function () {
+            let height = document.body.scrollHeight
+            $('.write').css({height: height})
+            $('#editor').css({height: height})
+            $('#articleContent').css({height: height-90})
+            $('#markDown').css({height: height})
+        }
 
-    $scope.init=function () {
-        $rootScope.web_title='简书 - 文章编辑'
-        $rootScope.ifShowNavbar=false
-        let data=$location.search()
-        $scope.way=data.way
-       $scope.getArticle(data.article_id)
+    }
+
+    $scope.updateArticle=function () {
+        $('.fa-refresh')[0].innerHTML=' 发布中...'
+        articleService.update($scope.article).then((result)=>{
+            if(result.status){
+                $('.fa-refresh')[0].innerHTML=' 已发布'
+                $scope.msg=result.msg
+            }
+        })
+    }
+    $scope.publishArticle=function () {
+        if($scope.way=='edit'){
+            $('.fa-mail-forward')[0].innerHTML=' 发布中...'
+            articleService.publish($scope.article).then((result)=>{
+                if(result.status){
+                    $('.fa-mail-forward')[0].innerHTML=' 已发布'
+                    $scope.msg=result.msg
+                    $scope.published=true
+                }
+            })
+        }
+        else if($scope.way='new'){
+            $('.fa-mail-forward')[0].innerHTML=' 发布中...'
+            articleService.create($scope.article).then((result)=>{
+                if(result.msg){
+                    let article_id=result.data
+                    $cookieStore.put('new_article_id',article_id)
+                    articleService.publish({article_id}).then((result)=>{
+                        if(result.status){
+                            $('.fa-mail-forward')[0].innerHTML=' 已发布'
+                            $scope.published=true
+                            $scope.ifEdit=true
+                        }
+                    })
+                }
+            })
+
+        }
+    }
+    $scope.saveArticle=function () {
+        if($scope.way=='edit'){
+
+        }
+        else if($scope.way=='new'){
+
+        }
+
+    }
+
+    $scope.init = function () {
+        $rootScope.web_title = '简书 - 文章编辑'
+        $rootScope.ifShowNavbar = false
+        let data = $location.search()
+        $scope.way = data.way
+        if($scope.way==='edit'){
+            $scope.getArticle(data.article_id)
+            $scope.ifEdit=true
+        }
+        else{
+            $scope.article={
+                title:"无标题文章",
+                content:''
+            }
+            $scope.published=false
+            $scope.articleCopy={}
+            Object.assign($scope.articleCopy,$scope.article)
+            $scope.$watch('article.title',(newValue,oldValue)=>{
+                // console.log(newValue)
+                $scope.articleCopy.title=newValue
+            })
+            $scope.$watch('article.content',(newValue,oldValue)=>{
+                //console.log(newValue)
+                $scope.articleCopy.content=$sce.trustAsHtml(marked(newValue))
+            })
+        }
+
+        $scope.changeSize()
+
     }()
+
+
 }])
 
 app.config(['$routeProvider', function ($routeProvider) {
@@ -382,13 +503,13 @@ app.config(['$routeProvider', function ($routeProvider) {
             controller: 'myArticlesCtrl',
             css: 'page/myArticles/myArticles.css'
         })
-        .when('/write',{
+        .when('/write', {
             templateUrl: "page/write/write.html",
             controller: 'writeCtrl',
             css: 'page/write/write.css'
         })
-         .otherwise({
-             redirectTo: '/'
-         })
+        .otherwise({
+            redirectTo: '/'
+        })
 
 }])
