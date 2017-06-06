@@ -368,7 +368,9 @@ app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService',
                         //console.log(newValue)
                         $('.fa-refresh')[0].innerHTML=' 发布更新'
                         $('.fa-mail-forward')[0].innerHTML=' 发布文章'
-                        $scope.articleCopy.content=$sce.trustAsHtml(marked(newValue))
+                        let content=$scope.article.content
+                        content=content.replace(/<script>/g,'script')
+                        $scope.articleCopy.content=$sce.trustAsHtml(marked(content))
                     })
                     // console.log(content)
                 }
@@ -462,7 +464,9 @@ app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService',
             })
             $scope.$watch('article.content',(newValue,oldValue)=>{
                 //console.log(newValue)
-                $scope.articleCopy.content=$sce.trustAsHtml(marked(newValue))
+                let content=$scope.article.content
+                content=content.replace(/<script>/g,'script')
+                $scope.articleCopy.content=$sce.trustAsHtml(marked(content))
             })
         }
 

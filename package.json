@@ -25,6 +25,7 @@
     "express-session": "^1.15.2",
     "font-awesome": "^4.7.0",
     "jquery": "^3.2.1",
+    "localtunnel": "^1.8.2",
     "marked": "^0.3.6",
     "morgan": "~1.8.1",
     "mysql": "^2.13.0",
