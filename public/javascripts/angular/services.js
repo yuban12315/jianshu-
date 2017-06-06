@@ -73,7 +73,6 @@ myService.factory('articleService', ['$q', '$http', ($q, $http) => {
             return defer.promise
         }
 
-
         deleteThis(article_id){
             let defer=$q.defer()
             $http.post('articles/delete',{article_id:article_id}).then((result)=>defer.resolve(result.data))
@@ -101,6 +100,12 @@ myService.factory('articleService', ['$q', '$http', ($q, $http) => {
         get_detail_free(article_id) {
             let defer = $q.defer()
             $http.get(`articles/detail_free?id=${article_id}`).then((result) => defer.resolve(result.data))
+            return defer.promise
+        }
+
+        search(name){
+            let defer=$q.defer()
+            $http.get(`articles/search?name=${name}`).then((result) => defer.resolve(result.data))
             return defer.promise
         }
 

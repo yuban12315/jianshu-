@@ -34,9 +34,9 @@ class article_service {
                     published: article_data.published,
                     publish_date: article_data.publish_date,
                     user_id: article_data.user_id
-                }, (error,result) => callback(error,result))
+                }, (error, result) => callback(error, result))
             },
-        ], (error,result) => callback(error,result))
+        ], (error, result) => callback(error, result))
     }
 
     update(article_data, callback) {
@@ -75,11 +75,11 @@ class article_service {
                     })
             },
             (callback) => {
-                mysql.query('update articles set published= ? where article_id=?', [1,article_id], (error) => {
-                    if(error){
+                mysql.query('update articles set published= ? where article_id=?', [1, article_id], (error) => {
+                    if (error) {
                         callback(error)
                     }
-                    else{
+                    else {
                         callback(null)
                     }
                 })
@@ -215,6 +215,27 @@ class article_service {
         ], (error, result) => callback(error, result))
     }
 
+    search(name, callback) {
+        async.waterfall([
+            (callback) => {
+                name = `%${name}%`
+                mysql.query('select a.article_id,title,content,username,publish_date from articles a,users u where a.user_id = u.user_id and a.published=1 and title like ?', name, (error, result) => {
+                    if (error) {
+                        callback(error)
+                    }
+                    else {
+                        for (let i in result) {
+                            result[i].content = result[i].content.slice(0, 200) + '...'
+                        }
+                        callback(null, result)
+                    }
+                })
+            }
+        ],(error,result)=>{
+            callback(error,result)
+        })
+    }
+
     check_data_create(article_data) {
         if (!article_data) {
             return false
@@ -243,7 +264,6 @@ class article_service {
         }
         return true
     }
-
 }
 
 module.exports = new article_service()

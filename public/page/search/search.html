@@ -1,0 +1,25 @@
+<div class="container">
+    <!--搜索页-->
+    <div class="col-xs-10 col-xs-offset-1">
+        <p>已找到{{nums}}条记录</p>
+    </div>
+    <div class="card col-xs-10 col-xs-offset-1" ng-repeat="item in articles">
+
+        <div class="col-xs-12">
+            <div class="header" >
+                <p class="author main-color">{{item.username}}</p>&nbsp;&nbsp;
+                <p class="time">
+                    <i class="fa fa-clock-o"></i>&nbsp;{{item.publish_date}}
+                </p>
+            </div>
+            <div class="title-main" ng-click="getDetail($index)">
+                <p>{{item.title}}</p>
+            </div>
+            <div class="content-main">
+                <p>{{item.content}}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="adder col-xs-12"></div>
+</div>

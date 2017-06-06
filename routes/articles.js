@@ -128,6 +128,28 @@ router.get('/detail_free', (req, res) => {
 })
 
 router.get('/search', (req, res) => {
+    let name
+    if (!req.query.name) {
+        name = 'test'
+    }
+    else  name=req.query.name
+
+    article_service.search(name,(error,result)=>{
+        if(error){
+            res.send({
+                status:false,
+                msg:error.message,
+                data:null
+            })
+        }
+        else {
+            res.send({
+                status:true,
+                msg:'',
+                data:result
+            })
+        }
+    })
 
 })
 

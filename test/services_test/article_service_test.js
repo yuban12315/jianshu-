@@ -8,7 +8,7 @@ let article={
 }
 
 let a={}
-article_service.publish(5,1,(error)=>{
+article_service.search('test',(error,result)=>{
     if(error) console.log(error)
-
+    if(result) console.log(result)
 })

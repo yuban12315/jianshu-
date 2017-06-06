@@ -6,7 +6,8 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
         return $rootScope.ifSignIn
     }
     $scope.search = function () {
-        alert('search')
+        $location.path('/search')
+        $location.search({name:$scope.name})
     }
     //检查用户登录状态
     $scope.checkSignIn = function () {
@@ -18,7 +19,7 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     //登出
     $scope.signOut = function () {
         userService.logout().then((result) => {
-            console.log(result)
+            //console.log(result)
             $location.path('/')
             location.reload()
         })
@@ -46,7 +47,7 @@ app.controller('navCtrl', ['$scope', '$rootScope', '$location', 'userService', f
     });
 
     $scope.init = function () {
-
+        $scope.name=''
     }()
 
 }])
@@ -110,7 +111,7 @@ app.controller('mainCtrl', ['$scope', '$rootScope', '$location', 'userService', 
     }
 
     $scope.init = function () {
-        console.log('main - init')
+        //console.log('main - init')
         $rootScope.web_title = '简书 - 创作你的创作'
         $scope.page = 1
         $rootScope.ifShowNavbar = true
@@ -137,7 +138,7 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
     $scope.init = function () {
         console.clear()
         $rootScope.ifShowNavbar = true
-        console.log('detail-init')
+        //console.log('detail-init')
         $scope.getDetail()
     }()
 }])
@@ -145,9 +146,9 @@ app.controller('detailCtrl', ['$scope', '$rootScope', '$location', 'articleServi
 app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
     $scope.submit = function () {
-        console.log('submit form')
-        console.log('username', $scope.form.username.val)
-        console.log('password', $scope.form.password.val)
+        // //console.log('submit form')
+        // //console.log('username', $scope.form.username.val)
+        // //console.log('password', $scope.form.password.val)
         userService.login({
             username: $scope.form.username.val,
             password: $scope.form.password.val
@@ -197,9 +198,9 @@ app.controller('signInCtrl', ['$scope', '$rootScope', '$location', 'userService'
 app.controller('signUpCtrl', ['$scope', '$rootScope', '$location', 'userService', function ($scope, $rootScope, $location, userService) {
 
     $scope.submit = function () {
-        console.log('submit form')
-        console.log('username', $scope.form.username.val)
-        console.log('password', $scope.form.password.val)
+        //console.log('submit form')
+        //console.log('username', $scope.form.username.val)
+        //console.log('password', $scope.form.password.val)
         userService.create({
             username: $scope.form.username.val,
             password: $scope.form.password.val
@@ -264,7 +265,7 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
         $('#modal-btn').click()
     }
     $scope.deleteArticle = function () {
-        console.log($scope.article)
+        //console.log($scope.article)
         articleService.deleteThis($scope.article.article_id).then((result) => {
             if (result.status) {
                 location.reload()
@@ -302,7 +303,7 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
 
         $('.article').removeClass('active-')
         $(`#${index}`).addClass('active-')
-        console.log()
+        //console.log()
     }
     $scope.getPrevious = function (article_id) {
         articleService.get_detail_free(article_id).then((result) => {
@@ -313,6 +314,9 @@ app.controller('myArticlesCtrl', ['$scope', '$rootScope', '$location', 'userServ
         })
     }
     $scope.init = function () {
+        if(!$rootScope.ifSignIn){
+            $location.path('/')
+        }
         $rootScope.web_title = '我的主页 - 简书'
         $rootScope.ifShowNavbar = false
         let height = document.body.scrollHeight
@@ -357,22 +361,22 @@ app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService',
                     // let content=result.data.content.toString().repeat(1)
                     // $scope.articleCopy.content=$sce.trustAsHtml(marked(content))
                     $scope.articleCopy.content=$sce.trustAsHtml(marked($scope.articleCopy.content))
-                    console.log($scope.articleCopy)
+                    //console.log($scope.articleCopy)
                     $scope.$watch('article.title',(newValue,oldValue)=>{
-                        // console.log(newValue)
+                        // //console.log(newValue)
                         $('.fa-refresh')[0].innerHTML=' 发布更新'
                         $('.fa-mail-forward')[0].innerHTML=' 发布文章'
                         $scope.articleCopy.title=newValue
                     })
                     $scope.$watch('article.content',(newValue,oldValue)=>{
-                        //console.log(newValue)
+                        ////console.log(newValue)
                         $('.fa-refresh')[0].innerHTML=' 发布更新'
                         $('.fa-mail-forward')[0].innerHTML=' 发布文章'
                         let content=$scope.article.content
                         content=content.replace(/<script>/g,'script')
                         $scope.articleCopy.content=$sce.trustAsHtml(marked(content))
                     })
-                    // console.log(content)
+                    // //console.log(content)
                 }
             })
         }
@@ -442,6 +446,9 @@ app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService',
     }
 
     $scope.init = function () {
+        if(!$rootScope.ifSignIn){
+            $location.path('/')
+        }
         $rootScope.web_title = '简书 - 文章编辑'
         $rootScope.ifShowNavbar = false
         let data = $location.search()
@@ -459,11 +466,11 @@ app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService',
             $scope.articleCopy={}
             Object.assign($scope.articleCopy,$scope.article)
             $scope.$watch('article.title',(newValue,oldValue)=>{
-                // console.log(newValue)
+                // //console.log(newValue)
                 $scope.articleCopy.title=newValue
             })
             $scope.$watch('article.content',(newValue,oldValue)=>{
-                //console.log(newValue)
+                ////console.log(newValue)
                 let content=$scope.article.content
                 content=content.replace(/<script>/g,'script')
                 $scope.articleCopy.content=$sce.trustAsHtml(marked(content))
@@ -475,6 +482,41 @@ app.controller('writeCtrl', ['$scope', '$rootScope', '$location', 'userService',
     }()
 
 
+}])
+
+app.controller('searchCtrl',['$scope','$rootScope','$location','userService','articleService',function ($scope,$rootScope,$location,userService,articleService) {
+
+    $scope.getArticles=function () {
+        let data=$location.search()
+        if(data.hasOwnProperty('name'))$scope.name=data.name
+        else  $scope.name='test'
+
+        articleService.search($scope.name).then((result)=>{
+            if(result.status){
+                $scope.articles=result.data
+                for (let i in $scope.articles) {
+                    $scope.articles[i].publish_date = articleService.setDate($scope.articles[i].publish_date)
+                    $scope.articles[i].content = marked($scope.articles[i].content).replace(/<.*?>/g, "")
+                    //result[i].content=result[i].content.replace(/<.*?>/g,"")
+                }
+                $scope.nums=result.data.length
+            }
+        })
+    }
+
+    $scope.getDetail = function (index) {
+        $location.path('/detail')
+        $location.search({id: $scope.articles[index].article_id})
+    }
+
+    $scope.init = function () {
+        //console.log('search - init')
+        $rootScope.web_title = '简书 - 搜索结果'
+        $rootScope.ifShowNavbar = true
+        $scope.getArticles()
+
+
+    }();
 }])
 
 app.config(['$routeProvider', function ($routeProvider) {
@@ -511,6 +553,11 @@ app.config(['$routeProvider', function ($routeProvider) {
             templateUrl: "page/write/write.html",
             controller: 'writeCtrl',
             css: 'page/write/write.css'
+        })
+        .when('/search', {
+            templateUrl: "page/search/search.html",
+            controller: 'searchCtrl',
+            css: 'page/search/search.css'
         })
         .otherwise({
             redirectTo: '/'
